@@ -1,0 +1,4 @@
+pedometer
+=========
+
+Cordova Pedometer Plugin
