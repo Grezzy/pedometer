@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<plugin xmlns="http://apache.org/cordova/ns/plugins/1.0" id="com.firerunner.cordova.pedometer" version="0.0.1">
+  <name>Pedometer</name>
+  <description>Pedometer Cordova Device Plugin</description>
+  <license>Proprietary</license>
+  <keywords>cordova,device</keywords>
+  <js-module src="www/pedometer.js" name="pedometer">
+    <clobbers target="device" />
+  </js-module>
+  <platform name="wp8">
+    <source-file src="src/wp8/Pedometer.cs" />
+    <config-file target="config.xml" parent="/*">
+      <feature name="Pedometer">
+        <param name="wp-package" value="Pedometer"/>
+      </feature>
+    </config-file>
+    <config-file target="Properties/WMAppManifest.xml" parent="/Deployment/App/Capabilities">
+      <Capability Name="ID_CAP_LOCATION" />
+    </config-file>
+  </platform>
+  <!--<platform name="ios">
+    <config-file target="config.xml" parent="/*">
+      <feature name="Pedometer">
+        <param name="ios-package" value="Pedometer"/>
+      </feature>
+    </config-file>
+    <header-file src="src/ios/CDVDevice.h" />
+    <source-file src="src/ios/CDVDevice.m" />
+  </platform>-->
+</plugin>
