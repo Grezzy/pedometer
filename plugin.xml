@@ -5,7 +5,7 @@
   <license>Proprietary</license>
   <keywords>cordova,device</keywords>
   <js-module src="www/pedometer.js" name="pedometer">
-    <clobbers target="device" />
+    <clobbers target="window.Pedometer" />
   </js-module>
   <platform name="wp8">
     <source-file src="src/wp8/Pedometer.cs" />
