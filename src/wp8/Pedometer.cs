@@ -6,8 +6,6 @@ using System.Threading.Tasks;
 using WPCordovaClassLib.Cordova;
 using WPCordovaClassLib.Cordova.Commands;
 using WPCordovaClassLib.Cordova.JSON;
-using Newtonsoft.Json.Linq;
-using Newtonsoft.Json;
 
 
 namespace Cordova.Extension.Commands
