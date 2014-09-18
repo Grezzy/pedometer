@@ -1,12 +1,13 @@
-﻿var Pedometer = {
+﻿
 
-    init: function (str, callback) {
+var Pedometer = {
+    init: function (success) {
         cordova.exec(
             function (data) {
-                callback(data);
+                if (success) success(data);
             },
             function (err) {
-                callback(err);
+                if (error) error(err);
             },
             "Pedometer",
             "init",
@@ -14,13 +15,13 @@
         );
     },
 
-    start: function (str, callback) {
+    start: function (success, error) {
         cordova.exec(
             function (data) {
-                callback(data);
+                if (success) success(data);
             },
             function (err) {
-                callback(err);
+                if (error) error(err);
             },
             "Pedometer",
             "start",
@@ -28,19 +29,35 @@
         );
     },
 
-    stop: function (str, callback) {
+    stop: function (success, error) {
         cordova.exec(
             function (data) {
-                callback(data);
+                if (success) success(data);
             },
             function (err) {
-                callback(err);
+                if (error) error(err);
             },
             "Pedometer",
             "stop",
             []
         );
+    },
+
+    getCurrentReading: function (success, error) {
+        cordova.exec(
+            function (data) {
+                if (success) success(data);
+            },
+            function (err) {
+                if (error) error(err);
+            },
+            "Pedometer",
+            "getCurrentReading",
+            []
+        );
     }
 };
 
+Pedometer.init();
 module.exports = Pedometer;
+
