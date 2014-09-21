@@ -24,7 +24,7 @@ namespace Cordova.Extension.Commands
             init(null);
         }
 
-        public async void init(string options)
+        public async void initialize(string options)
         {
             PluginResult result = new PluginResult(PluginResult.Status.OK);
             result.KeepCallback = true;

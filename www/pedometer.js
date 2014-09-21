@@ -1,7 +1,7 @@
 ﻿
 
 var Pedometer = {
-    init: function (success) {
+    initialize: function (success) {
         cordova.exec(
             function (data) {
                 if (success) success(data);
@@ -10,7 +10,7 @@ var Pedometer = {
                 if (error) error(err);
             },
             "Pedometer",
-            "init",
+            "initialize",
             [] // option : "debug", 0.5
         );
     },
@@ -58,6 +58,6 @@ var Pedometer = {
     }
 };
 
-Pedometer.init();
+Pedometer.initialize();
 module.exports = Pedometer;
 
