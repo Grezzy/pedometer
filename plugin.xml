@@ -18,13 +18,21 @@
       <Capability Name="ID_CAP_LOCATION" />
     </config-file>
   </platform>
-  <!--<platform name="ios">
+  <platform name="ios">
     <config-file target="config.xml" parent="/*">
       <feature name="Pedometer">
-        <param name="ios-package" value="Pedometer"/>
+        <param name="ios-package" value="Pedometer" />
       </feature>
     </config-file>
-    <header-file src="src/ios/CDVDevice.h" />
-    <source-file src="src/ios/CDVDevice.m" />
-  </platform>-->
+
+    <source-file src="src/ios/Pedometer.swift" />
+
+    <framework src="CoreLocation.framework" weak="true" />
+    <framework src="CoreMotion.framework" weak="true" />
+
+    <!-- android specific notification apis -->
+    <js-module src="www/Pedometer.js" name="Pedometer">
+      <clobbers target="window.Pedometer" />
+    </js-module>
+  </platform>
 </plugin>
