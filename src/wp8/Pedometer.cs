@@ -21,7 +21,7 @@ namespace Cordova.Extension.Commands
         public Pedometer()
             : base()
         {
-            init(null);
+            initialize(null);
         }
 
         public async void initialize(string options)
