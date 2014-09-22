@@ -24,7 +24,7 @@ namespace Cordova.Extension.Commands
             init(null);
         }
 
-        public async void init(string options)
+        public async void initialize(string options)
         {
             PluginResult result = new PluginResult(PluginResult.Status.OK);
             result.KeepCallback = true;
@@ -42,6 +42,24 @@ namespace Cordova.Extension.Commands
             catch (Exception ex)
             {
                 result.Message = JsonHelper.Serialize(new { error = "init", message = ex.Message });
+                DispatchCommandResult(result);
+            }
+        }
+
+        public async void isSupported(string options)
+        {
+            PluginResult result = new PluginResult(PluginResult.Status.OK);
+            result.KeepCallback = true;
+
+            try
+            {
+                bool available = await StepCounter.IsSupportedAsync();
+                result.Message = JsonHelper.Serialize(available);
+                DispatchCommandResult(result);
+            }
+            catch (Exception ex)
+            {
+                result.Message = JsonHelper.Serialize(new { error = "isSupported", message = ex.Message });
                 DispatchCommandResult(result);
             }
         }
