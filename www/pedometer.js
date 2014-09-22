@@ -1,7 +1,7 @@
 ﻿
 
 var Pedometer = {
-    initialize: function (success) {
+    initialize: function (success, error) {
         cordova.exec(
             function (data) {
                 if (success) success(data);
@@ -11,7 +11,21 @@ var Pedometer = {
             },
             "Pedometer",
             "initialize",
-            [] // option : "debug", 0.5
+            [] 
+        );
+    },
+
+    isSupported: function (success, error) {
+        cordova.exec(
+            function (data) {
+                if (success) success(data);
+            },
+            function (err) {
+                if (error) error(err);
+            },
+            "Pedometer",
+            "isSupported",
+            [] 
         );
     },
 
