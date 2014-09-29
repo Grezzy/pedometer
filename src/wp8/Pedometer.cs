@@ -7,6 +7,7 @@ using WPCordovaClassLib.Cordova;
 using WPCordovaClassLib.Cordova.Commands;
 using WPCordovaClassLib.Cordova.JSON;
 using Lumia.Sense;
+using System.Runtime.Serialization;
 
 
 namespace Cordova.Extension.Commands
@@ -17,6 +18,7 @@ namespace Cordova.Extension.Commands
         private StepCounter stepCounter;
         private bool isRunning;
         private DateTimeOffset? runStarted;
+        private PedometerReading latestReading = null;
 
         public Pedometer()
             : base()
@@ -101,12 +103,20 @@ namespace Cordova.Extension.Commands
                 PedometerReading reading = new PedometerReading();
                 if (!isReady)
                 {
-                    DispatchCommandResult(new PluginResult(PluginResult.Status.OK, reading));
+                    DispatchCommandResult(new PluginResult(PluginResult.Status.OK, latestReading ?? reading));
                     return;
                 }
 
                 StepCounterReading current = await stepCounter.GetCurrentReadingAsync();
                 StepCounterReading today = await stepCounter.GetStepCountAtAsync(DateTimeOffset.Now.Date);
+
+                if (null == current && null == today)
+                {
+                    DispatchCommandResult(new PluginResult(PluginResult.Status.OK, latestReading ?? reading));
+                    return;
+                }
+
+                if (null == today) today = new StepCounterReading(0, TimeSpan.FromMilliseconds(0), 0, TimeSpan.FromMilliseconds(0), DateTimeOffset.Now.Date);
 
                 reading.todayWalkingSteps = Convert.ToInt32(current.WalkingStepCount - today.WalkingStepCount);
                 reading.todayWalkingMinutes = Convert.ToInt32(current.WalkTime.TotalMinutes - today.WalkTime.TotalMinutes);
@@ -120,6 +130,8 @@ namespace Cordova.Extension.Commands
                     reading.lastRunMinutes = Convert.ToInt32(current.RunTime.TotalMinutes - lastRun.RunTime.TotalMinutes);
                 }
 
+                latestReading = reading;
+
                 result.Message = JsonHelper.Serialize(reading);
                 DispatchCommandResult(result);
             }
@@ -132,13 +144,20 @@ namespace Cordova.Extension.Commands
 
     }
 
+    [DataContract]
     public class PedometerReading
     {
+        [DataMember]
         public int todayWalkingSteps { get; set; }
+        [DataMember]
         public int todayWalkingMinutes { get; set; }
+        [DataMember]
         public int todayRunningSteps { get; set; }
+        [DataMember]
         public int todayRunningMinutes { get; set; }
+        [DataMember]
         public int lastRunSteps { get; set; }
+        [DataMember]
         public int lastRunMinutes { get; set; }
     }
 }
