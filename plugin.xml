@@ -7,6 +7,17 @@
   <js-module src="www/pedometer.js" name="pedometer">
     <clobbers target="window.Pedometer" />
   </js-module>
+  <platform name="android">
+        <config-file target="res/xml/config.xml" parent="/*">
+            <feature name="Pedometer">
+                <param name="android-package" value="com.grezzy.pedometer.Pedometer" />
+            </feature>
+        </config-file>
+        <source-file src="src/android/Pedometer.java" target-dir="src/com/grezzy/pedometer" />
+        <config-file target="AndroidManifest.xml" parent="/manifest">
+            <uses-permission android:name="android.permission.BODY_SENSORS"/>            
+        </config-file>
+    </platform>
   <platform name="wp8">
     <source-file src="src/wp8/Pedometer.cs" />
     <config-file target="config.xml" parent="/*">
