@@ -1,4 +1,4 @@
-package com.grezzy.pedometer;
+package com.firerunner.Cordova;
 
 import org.apache.cordova.CallbackContext;
 import org.apache.cordova.CordovaPlugin;
