@@ -1,4 +1,4 @@
-package com.firerunner.Cordova;
+package com.firerunner.cordova;
 
 import org.apache.cordova.CallbackContext;
 import org.apache.cordova.CordovaPlugin;
@@ -29,18 +29,6 @@ public class Pedometer extends CordovaPlugin implements SensorEventListener {
     private Date lastRunFinish = null;
     private float lastRunStartSteps = 0;
 
-
-    public Pedometer()
-    {
-        sensorManager = (SensorManager) cordova.getActivity().getSystemService(Context.SENSOR_SERVICE);
-        Sensor countSensor = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER);
-        if (countSensor != null) {
-            sensorManager.registerListener(this, countSensor, SensorManager.SENSOR_DELAY_UI);
-        } else {
-            isSupported = false;
-        }
-    }
-
     @Override
     public void onSensorChanged(SensorEvent event) {
         stepsCount = event.values[0];
@@ -55,11 +43,21 @@ public class Pedometer extends CordovaPlugin implements SensorEventListener {
 
         JSONObject returnObj = new JSONObject();
 
-        if(action == "isSupported"){
-            
+        if(action.equals("isSupported")){
+
             addProperty(returnObj, "isSupported", isSupported);
 
-        } else if(action == "getCurrentReading"){
+        } else if(action.equals("initialize")){
+
+            sensorManager = (SensorManager) cordova.getActivity().getSystemService(Context.SENSOR_SERVICE);
+            Sensor countSensor = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER);
+            if (countSensor != null) {
+                sensorManager.registerListener(this, countSensor, SensorManager.SENSOR_DELAY_UI);
+            } else {
+                isSupported = false;
+            }
+
+        } else if(action.equals("getCurrentReading")){
 
             addProperty(returnObj, "todayWalkingSteps", (int)stepsCount);
             addProperty(returnObj, "todayWalkingMinutes", 0);
@@ -75,7 +73,7 @@ public class Pedometer extends CordovaPlugin implements SensorEventListener {
                 addProperty(returnObj, "lastRunMinutes", 0);
             }
 
-        } else if(action == "start"){
+        } else if(action.equals("start")){
 
             lastRunStart = new Date();
             lastRunFinish = null;
@@ -83,7 +81,7 @@ public class Pedometer extends CordovaPlugin implements SensorEventListener {
 
             addProperty(returnObj, "isSuccessful", true);
 
-        }  else if(action == "stop"){
+        }  else if(action.equals("stop")){
 
             lastRunFinish = new Date();
             addProperty(returnObj, "isSuccessful", true);
@@ -103,5 +101,6 @@ public class Pedometer extends CordovaPlugin implements SensorEventListener {
             obj.put(key, value);
         }
         catch (JSONException e) { }
+        
     }
 }
