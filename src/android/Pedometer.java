@@ -6,8 +6,11 @@ import org.apache.cordova.PluginResult;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.hardware.*;
-import android.os.Bundle;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
+import android.preference.PreferenceManager;
 
 import java.util.Date;
 import java.util.ArrayList;
@@ -22,6 +25,11 @@ import org.json.JSONObject;
 public class Pedometer extends CordovaPlugin implements SensorEventListener {
 
     private SensorManager sensorManager;
+    private SharedPreferences settings;
+
+    private float initialStepsCount = 0;
+    private Date initialStepsDate = null;
+
     private float stepsCount = 0;
     private boolean isSupported = true;
 
@@ -49,6 +57,12 @@ public class Pedometer extends CordovaPlugin implements SensorEventListener {
 
         } else if(action.equals("initialize")){
 
+            startService();
+
+            settings = PreferenceManager.getDefaultSharedPreferences(cordova.getActivity());
+            initialStepsCount = settings.getFloat("todayStepsCount", 0);
+            initialStepsDate = new Date(settings.getLong("todayStepsDate", (new Date()).getTime()));
+
             sensorManager = (SensorManager) cordova.getActivity().getSystemService(Context.SENSOR_SERVICE);
             Sensor countSensor = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER);
             if (countSensor != null) {
@@ -59,8 +73,9 @@ public class Pedometer extends CordovaPlugin implements SensorEventListener {
 
         } else if(action.equals("getCurrentReading")){
 
-            addProperty(returnObj, "todayWalkingSteps", (int)stepsCount);
+            addProperty(returnObj, "todayWalkingSteps", (int)(settings.getFloat("todayStepsCount", 0)));
             addProperty(returnObj, "todayWalkingMinutes", 0);
+            addProperty(returnObj, "todayWalkingMeters", 0);
             addProperty(returnObj, "todayRunningSteps", 0);
             addProperty(returnObj, "todayRunningMinutes", 0);
 
@@ -95,12 +110,41 @@ public class Pedometer extends CordovaPlugin implements SensorEventListener {
         return true;
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        // don't know if it's ok yet
+        //stopService();
+    }
+
+    private void startService() {
+        Activity context = cordova.getActivity();
+
+        Intent intent = new Intent(
+                context, PedometerService.class);
+        context.startService(intent);
+    }
+
+    private void stopService() {
+        Activity context = cordova.getActivity();
+
+        Intent intent = new Intent(
+                context, PedometerService.class);
+        context.stopService(intent);
+    }
+
     private void addProperty(JSONObject obj, String key, Object value)
     {
         try {
             obj.put(key, value);
         }
         catch (JSONException e) { }
-        
+
+    }
+
+    private Date today()
+    {
+        Long time = new Date().getTime();
+        return new Date(time - time % (24 * 60 * 60 * 1000));
     }
 }

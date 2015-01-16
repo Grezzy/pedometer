@@ -8,16 +8,16 @@
     <clobbers target="window.Pedometer" />
   </js-module>
   <platform name="android">
-        <config-file target="res/xml/config.xml" parent="/*">
-            <feature name="Pedometer">
-                <param name="android-package" value="com.firerunner.cordova.Pedometer" />
-            </feature>
-        </config-file>
-        <source-file src="src/android/Pedometer.java" target-dir="src/com/firerunner/cordova" />
-        <config-file target="AndroidManifest.xml" parent="/manifest">
-            <uses-permission android:name="android.permission.BODY_SENSORS"/>            
-        </config-file>
-    </platform>
+    <config-file target="res/xml/config.xml" parent="/*">
+      <feature name="Pedometer">
+        <param name="android-package" value="com.firerunner.cordova.Pedometer" />
+      </feature>
+    </config-file>
+    <source-file src="src/android/Pedometer.java" target-dir="src/com/firerunner/cordova" />
+    <config-file target="AndroidManifest.xml" parent="/manifest">
+      <uses-permission android:name="android.permission.BODY_SENSORS"/>
+    </config-file>
+  </platform>
   <platform name="wp8">
     <source-file src="src/wp8/Pedometer.cs" />
     <config-file target="config.xml" parent="/*">
@@ -30,20 +30,20 @@
     </config-file>
   </platform>
   <platform name="ios">
-      <config-file target="config.xml" parent="/*">
-          <feature name="Pedometer">
-              <param name="ios-package" value="Pedometer" />
-          </feature>
-      </config-file>
-      
-      <source-file src="src/ios/Pedometer.swift" />
-      
-      <framework src="CoreLocation.framework" weak="true" />
-      <framework src="CoreMotion.framework" weak="true" />
-      
-      <!-- android specific notification apis -->
-      <js-module src="www/Pedometer.js" name="Pedometer">
-          <clobbers target="window.Pedometer" />
-      </js-module>
+    <config-file target="config.xml" parent="/*">
+      <feature name="Pedometer">
+        <param name="ios-package" value="Pedometer" />
+      </feature>
+    </config-file>
+
+    <source-file src="src/ios/Pedometer.swift" />
+
+    <framework src="CoreLocation.framework" weak="true" />
+    <framework src="CoreMotion.framework" weak="true" />
+
+    <!-- android specific notification apis -->
+    <js-module src="www/Pedometer.js" name="Pedometer">
+      <clobbers target="window.Pedometer" />
+    </js-module>
   </platform>
 </plugin>
