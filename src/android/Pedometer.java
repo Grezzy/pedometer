@@ -37,6 +37,8 @@ public class Pedometer extends CordovaPlugin implements SensorEventListener {
     private Date lastRunFinish = null;
     private float lastRunStartSteps = 0;
 
+    private JSONObject bioProfile = null;
+
     @Override
     public void onSensorChanged(SensorEvent event) {
         stepsCount = event.values[0];
@@ -57,6 +59,10 @@ public class Pedometer extends CordovaPlugin implements SensorEventListener {
 
         } else if(action.equals("initialize")){
 
+            if(args.length() > 0){
+                bioProfile = args.getJSONObject(0);
+            }
+
             startService();
 
             settings = PreferenceManager.getDefaultSharedPreferences(cordova.getActivity());
@@ -73,9 +79,11 @@ public class Pedometer extends CordovaPlugin implements SensorEventListener {
 
         } else if(action.equals("getCurrentReading")){
 
-            addProperty(returnObj, "todayWalkingSteps", (int)(settings.getFloat("todayStepsCount", 0)));
+            int todaySteps = (int)(settings.getFloat("todayStepsCount", 0));
+            int todayMeters = bioProfile == null ? 0 : bioProfile.getInt("stride") * todaySteps / 100 ;
+            addProperty(returnObj, "todayWalkingSteps", todaySteps);
             addProperty(returnObj, "todayWalkingMinutes", 0);
-            addProperty(returnObj, "todayWalkingMeters", 0);
+            addProperty(returnObj, "todayWalkingMeters", todayMeters);
             addProperty(returnObj, "todayRunningSteps", 0);
             addProperty(returnObj, "todayRunningMinutes", 0);
 

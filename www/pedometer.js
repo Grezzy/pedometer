@@ -1,7 +1,7 @@
-﻿
+cordova.define("com.firerunner.cordova.pedometer.pedometer", function(require, exports, module) { 
 
 var Pedometer = {
-    initialize: function (success, error) {
+    initialize: function (bioprofile, success, error) {
         cordova.exec(
             function (data) {
                 if (success) success(data);
@@ -11,7 +11,7 @@ var Pedometer = {
             },
             "Pedometer",
             "initialize",
-            [] 
+            [bioprofile]
         );
     },
 
@@ -72,6 +72,7 @@ var Pedometer = {
     }
 };
 
-Pedometer.initialize();
 module.exports = Pedometer;
 
+
+});
