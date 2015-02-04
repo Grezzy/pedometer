@@ -22,7 +22,8 @@ public class Pedometer: CDVPlugin {
     }
     
     func isSupported(command: CDVInvokedUrlCommand){
-        var pluginResult = CDVPluginResult(status: CDVCommandStatus_OK, messageAsBool: CMPedometer.isStepCountingAvailable())
+        var res = NSDictionary(object: CMPedometer.isStepCountingAvailable(), forKey: "isSupported")        
+        var pluginResult = CDVPluginResult(status:CDVCommandStatus_OK, messageAsDictionary:res)
         commandDelegate.sendPluginResult(pluginResult, callbackId:command.callbackId)
     }
     
@@ -45,6 +46,7 @@ public class Pedometer: CDVPlugin {
             var reading = NSMutableDictionary()
             reading.setObject(0, forKey: "todayWalkingSteps")
             reading.setObject(0, forKey: "todayWalkingMinutes")
+            reading.setObject(0, forKey: "todayWalkingMeters")
             reading.setObject(0, forKey: "todayRunningSteps")
             reading.setObject(0, forKey: "todayRunningMinutes")
             reading.setObject(0, forKey: "todayRunningSteps")
