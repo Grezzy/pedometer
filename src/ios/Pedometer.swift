@@ -14,15 +14,21 @@ public class Pedometer: CDVPlugin {
     
     var stepCounter = CMPedometer()
     var runStarted = NSDate(timeIntervalSince1970: 0)
+    var bioProfile : NSDictionary?
+    let defaultStride = 0.75;
     
     
     func initialize(command: CDVInvokedUrlCommand){
         var pluginResult = CDVPluginResult(status: CDVCommandStatus_OK)
+        if(command.arguments.count > 0){
+            self.bioProfile = command.arguments[0] as? NSDictionary
+            println(self.bioProfile)
+        }        
         commandDelegate.sendPluginResult(pluginResult, callbackId:command.callbackId)
     }
     
     func isSupported(command: CDVInvokedUrlCommand){
-        var res = NSDictionary(object: CMPedometer.isStepCountingAvailable(), forKey: "isSupported")        
+        var res = NSDictionary(object: CMPedometer.isStepCountingAvailable(), forKey: "isSupported")
         var pluginResult = CDVPluginResult(status:CDVCommandStatus_OK, messageAsDictionary:res)
         commandDelegate.sendPluginResult(pluginResult, callbackId:command.callbackId)
     }
@@ -63,6 +69,16 @@ public class Pedometer: CDVPlugin {
                     data, error in
                     if(data != nil){
                         reading.setObject(data.numberOfSteps, forKey: "todayWalkingSteps")
+                        if(self.bioProfile?.objectForKey("stride") != nil)
+                        {
+                            var stride = (self.bioProfile?.objectForKey("stride") as NSNumber).floatValue / 100
+                            //println("Stride \(stride)")
+                            var meters = ((data.numberOfSteps.floatValue * stride) as NSNumber).integerValue
+                            //println("Meters \(meters)")
+                            if(stride > 0){
+                                reading.setObject(meters, forKey: "todayWalkingMeters")
+                            }
+                        }
                     }
                     if(self.runStarted.timeIntervalSince1970 != 0){
                         self.stepCounter.queryPedometerDataFromDate(self.runStarted, toDate: now, withHandler: {
